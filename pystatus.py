@@ -12,6 +12,7 @@ from time import sleep
 VERSION = {'version': 1}
 LOADAVGFILE = '/proc/loadavg'
 MEMFILE = '/proc/meminfo'
+OK_CLR = '#55ff55'
 WARN_CLR = '#ffff55'
 ALERT_CLR = '#ff5555'
 NORMAL_CLR = '#ffffff'
@@ -46,6 +47,9 @@ def get_acpi():
 
     if percent < 50:
         color = ALERT_CLR
+
+    if 'Dis' not in charging:
+        color = OK_CLR
 
     return {'full_text':
             "{0}: {1:.0f}%".format(charging, percent),
