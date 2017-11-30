@@ -6,8 +6,11 @@ Create status output for sway.
 import sys
 import json
 import subprocess
+import re
+import colorsys
 from datetime import datetime
 from time import sleep
+from scipy import interp
 
 VERSION = {'version': 1}
 LOADAVGFILE = '/proc/loadavg'
@@ -26,34 +29,48 @@ def get_load_avg():
         line = la_fh.readline()
         loadavg = float(line.split(' ')[0])
         color = NORMAL_CLR
-        if loadavg > 3:
-            color = WARN_CLR
-
+        clrval = loadavg
         if loadavg > 4:
-            color = ALERT_CLR
+            clrval = 4
+        interp_val = interp(clrval, [0, 4], [1/3, 0])
+        color = hsv_rgbhex((interp_val, 1.0, 1))
         return {'full_text': "Load: {0:.2f}".format(loadavg),
                 'color': color}
+
+
+def hsv_rgbhex(hsv):
+    """
+    Convert HSV values to RGB hex.
+    """
+    hexstr = '#'
+    for num in colorsys.hsv_to_rgb(*hsv):
+        val = num * 256
+        if val > 255:
+            val = 255
+        hexstr += '{0:02x}'.format(int(val))
+    return hexstr
+
 
 def get_acpi():
     """
     Return acpi status.
     """
-    status = subprocess.check_output(['acpi', '-i']).split()
-    charging = status[2].decode('utf-8').split(',')[0]
-    percent = float(status[3].decode('utf-8').split('%')[0])
-    color = NORMAL_CLR
-    if percent < 55:
-        color = WARN_CLR
+    output = subprocess.check_output(['acpi', '-i']).decode('utf-8')
+    status = output.split()
+    charging = status[2].split(',')[0]
+    full_text = output.split('\n')[0].split(',')[2].strip()
+    percent = float(status[3].split('%')[0])
 
-    if percent < 50:
-        color = ALERT_CLR
+    interp_val = interp(percent, [0, 100], [0, 1/3])
+    color = hsv_rgbhex((interp_val, 1.0, 1))
 
     if 'Dis' not in charging:
         color = OK_CLR
 
     return {'full_text':
-            "{0}: {1:.0f}%".format(charging, percent),
+            "({0:.0f}%) {1}".format(percent, full_text),
             'color': color}
+
 
 
 def get_volume():
@@ -62,11 +79,15 @@ def get_volume():
     """
     output = subprocess.check_output(['amixer', 'get', 'Master'])
     line = output.decode("utf-8").split('\n')[5]
-    status = line.split()[4]
+    regx = re.compile(r'\d*\%')
+    mtch = regx.findall(line)
+    status = mtch[0]
     muted = 'off' in line
-    color = NORMAL_CLR
+    interp_val = interp(float(status[:-1]), [0, 100], [2/3, 1/3])
+    color = hsv_rgbhex((interp_val, 1.0, 1))
     if muted:
-        color = WARN_CLR
+        color = hsv_rgbhex((interp_val, 0.6, 0.5))
+
     return {'full_text': 'Vol: {}'.format(status),
             'color': color}
 
