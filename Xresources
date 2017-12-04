@@ -1,0 +1,9 @@
+URxvt.font: xft:Source Code Pro Medium:pixelsize=12:antialias=true:hinting=true,xft:DejaVu Sans Mono for Powerline:size=12,xft:FontAwesome:size=12
+URxvt.scrollBar: false
+URxvt.letterSpace: -1
+URxvt.loginShell: true
+URxvt.fading: 30
+URxvt.cursorBlink: true
+URxvt.depth: 32
+URxvt.background: rgba:0000/0000/0200/c800
+URxvt.foreground: #b2b2b2
