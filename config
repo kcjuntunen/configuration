@@ -14,21 +14,36 @@ set $down j
 set $up k
 set $right l
 
+# Spacemacs colors
+set $bg-color            #292b2e
+set $inactive-bg-color   #2f343f
+set $text-color          #b2b2b2
+set $inactive-text-color #676e7d
+set $urgent-bg-color     #e53935
+set $indicator           #39e535
+set $command-text        #a45bad
+set $selected-text       #4f97d7
+set $selection-bg        #444155
+
+# Fonts
 set $monospace pango:Source Code Pro Medium 10
-set $monoterm 'xft:Source Code Pro Medium:pixelsize=12:antialias=true:hinting=true'
 set $sansserif pango:Cantarell 10
-# Your preferred terminal emulator
-set $term urxvt256c-ml -ls +sb -bg "#141414" -fg "grey" -fn $monoterm -name "$USER@$HOSTNAME"
-set $wallpaper /home/juntunenkc/Pictures/Bing/latest.jpg
+
+# Commands
+set $term urxvt256c-ml -name "urxvt@$HOSTNAME"
+set $wallpaper $(ls /home/juntunenkc/Pictures/Bing/*jpg | sort -R | tail -1)
 set $editor /home/juntunenkc/bin/em
 set $browser $(which google-chrome)
+set $menu dmenu_run -l 25 -p \> -nb "$bg-color" -nf "$command-text" -sf "$selected-text" -sb "$selection-bg" -fn "Source Code Pro-10"
 set $lock $(which swaylock) -i $wallpaper --scaling=fill
 set $volup amixer -q set Master 5%+ unmute
 set $voldn amixer -q set Master 5%- unmute
 set $volmt amixer -q set Master toggle
 
-# Your preferred application launcher
-set $menu dmenu_run
+client.focused             $bg-color            $bg-color            $text-color            $indicator
+client.unfocused           $inactive-bg-color   $inactive-bg-color   $inactive-text-color   $indicator
+client.focused-inactive    $inactive-bg-color   $inactive-bg-color   $inactive-text-color   $indicator
+client.urgent              $urgent-bg-color     $urgent-bg-colori    $text-color            $indicator
 
 ### Output configuration
 #
@@ -116,23 +131,29 @@ font $sansserif
 #
 # Workspaces:
 #
+    set $ws1 "1:"
+    set $ws2 "2:"
+    set $ws3 "3:"
+    set $ws4 "4:"
+    set $ws5 "5:"
+    set $ws10 "10:"
     # switch to workspace
-    bindsym $mod+1 workspace 1
-    bindsym $mod+2 workspace 2
-    bindsym $mod+3 workspace 3
-    bindsym $mod+4 workspace 4
-    bindsym $mod+5 workspace 5
+    bindsym $mod+1 workspace $ws1
+    bindsym $mod+2 workspace $ws2
+    bindsym $mod+3 workspace $ws3
+    bindsym $mod+4 workspace $ws4
+    bindsym $mod+5 workspace $ws5
     bindsym $mod+6 workspace 6
     bindsym $mod+7 workspace 7
     bindsym $mod+8 workspace 8
     bindsym $mod+9 workspace 9
     bindsym $mod+0 workspace 10
     # move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace 1
-    bindsym $mod+Shift+2 move container to workspace 2
-    bindsym $mod+Shift+3 move container to workspace 3
-    bindsym $mod+Shift+4 move container to workspace 4
-    bindsym $mod+Shift+5 move container to workspace 5
+    bindsym $mod+Shift+1 move container to workspace $ws1
+    bindsym $mod+Shift+2 move container to workspace $ws2
+    bindsym $mod+Shift+3 move container to workspace $ws3
+    bindsym $mod+Shift+4 move container to workspace $ws4
+    bindsym $mod+Shift+5 move container to workspace $ws5
     bindsym $mod+Shift+6 move container to workspace 6
     bindsym $mod+Shift+7 move container to workspace 7
     bindsym $mod+Shift+8 move container to workspace 8
@@ -201,7 +222,6 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
-
 #
 # Status Bar:
 #
@@ -211,10 +231,20 @@ bar {
     status_command /home/juntunenkc/bin/pystatus.py 5
     font $monospace
     colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
+        # focused_workspace  #4c7899 #285577 #ffffff
+        # active_workspace   #333333 #5f676a #ffffff
+        # inactive_workspace #333333 #222222 #888888
+        # urgent_workspace   #2f343a #900000 #ffffff
+        # ========== 
+        # statusline #2f343f
+        background $bg-color
+        focused_workspace  $selected-text       $selection-bg      $selected-text
+        active_workspace   $selected-text       $bg-color          $text_color
+        inactive_workspace $inactive-text-color $inactive-bg-color $selected-text
+        urgent_workspace   $inactive-text-color $urgent-bg-color   $text-color
     }
 }
 
 include /etc/sway/config.d/*
+
+exec xrdb -load ~/.Xresources
