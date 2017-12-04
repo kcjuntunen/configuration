@@ -48,7 +48,7 @@ output * bg $wallpaper fill
 #
   input "2:8:AlpsPS/2_ALPS_GlidePoint" {
       dwt enabled
-      tap enabled
+      tap disabled
       natural_scroll enabled
       middle_emulation enabled
   }
