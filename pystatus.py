@@ -15,10 +15,11 @@ from scipy import interp
 VERSION = {'version': 1}
 LOADAVGFILE = '/proc/loadavg'
 MEMFILE = '/proc/meminfo'
-OK_CLR = '#55ff55'
-WARN_CLR = '#ffff55'
-ALERT_CLR = '#ff5555'
-NORMAL_CLR = '#ffffff'
+OK_CLR = '#55ff55ff'
+WARN_CLR = '#ffff55ff'
+ALERT_CLR = '#ff5555ff'
+NORMAL_CLR = '#ffffffff'
+BACKGROUND_CLR = '#292b2eff'
 
 
 def get_load_avg():
@@ -35,6 +36,7 @@ def get_load_avg():
         interp_val = interp(clrval, [0, 4], [1/3, 0])
         color = hsv_rgbhex((interp_val, 1.0, 1))
         return {'full_text': "Load: {0:.2f}".format(loadavg),
+                'background': BACKGROUND_CLR,
                 'color': color}
 
 
@@ -48,7 +50,7 @@ def hsv_rgbhex(hsv):
         if val > 255:
             val = 255
         hexstr += '{0:02x}'.format(int(val))
-    return hexstr
+    return hexstr + 'ff'
 
 
 def get_acpi():
@@ -59,7 +61,10 @@ def get_acpi():
     status = output.split()
     charging = status[2].split(',')[0]
     full_text = output.split('\n')[0].split(',')[2].strip()
-    percent = float(status[3].split('%')[0])
+    percentstr = status[3].split('%')[0]
+    if percentstr == '':
+        percentstr = '0'
+    percent = float(percentstr)
 
     interp_val = interp(percent, [0, 100], [0, 1/3])
     color = hsv_rgbhex((interp_val, 1.0, 1))
@@ -69,6 +74,7 @@ def get_acpi():
 
     return {'full_text':
             "({0:.0f}%) {1}".format(percent, full_text),
+            'background': BACKGROUND_CLR,
             'color': color}
 
 
@@ -89,6 +95,7 @@ def get_volume():
         color = hsv_rgbhex((interp_val, 0.6, 0.5))
 
     return {'full_text': 'Vol: {}'.format(status),
+            'background': BACKGROUND_CLR,
             'color': color}
 
 
@@ -101,7 +108,8 @@ def get_free_hd():
     for line in lines:
         if 'home' in line:
             freespace = line.split()[3]
-            return {'full_text': 'Home: {0}'.format(freespace), 'color': NORMAL_CLR}
+            return {'full_text': 'Home: {0}'.format(freespace),
+                    'background': BACKGROUND_CLR, 'color': NORMAL_CLR}
 
 
 def get_free_ram():
@@ -118,6 +126,7 @@ def get_free_ram():
             if 'SwapFree' in line:
                 freeswap = int(line.split()[1])
     return {'full_text': 'RAM: {}M Swap: {}M'.format(freemem // 1024, freeswap // 1024),
+            'background': BACKGROUND_CLR,
             'color': color}
 
 
@@ -127,6 +136,7 @@ def get_time():
     """
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
     return {'full_text': '{}'.format(now),
+            'background': BACKGROUND_CLR,
             'color': NORMAL_CLR}
 
 
