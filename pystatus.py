@@ -120,6 +120,8 @@ def get_free_ram():
         for line in mem_fh.readlines():
             if 'MemFree' in line:
                 freemem = int(line.split()[1])
+                colorval = interp(freemem, [0, 2 * 1024 * 1024], [0, 1/3])
+                color = hsv_rgbhex((colorval, 1.0, 1))
             if 'SwapFree' in line:
                 freeswap = int(line.split()[1])
     return {'full_text': 'RAM: {}M Swap: {}M'.format(freemem // 1024, freeswap // 1024),
