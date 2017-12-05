@@ -30,10 +30,7 @@ def get_load_avg():
         line = la_fh.readline()
         loadavg = float(line.split(' ')[0])
         color = NORMAL_CLR
-        clrval = loadavg
-        if loadavg > 4:
-            clrval = 4
-        interp_val = interp(clrval, [0, 4], [1/3, 0])
+        interp_val = interp(loadavg, [0, 4], [1/3, 0])
         color = hsv_rgbhex((interp_val, 1.0, 1))
         return {'full_text': "Load: {0:.2f}".format(loadavg),
                 'background': BACKGROUND_CLR,
