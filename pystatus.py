@@ -8,6 +8,7 @@ import json
 import subprocess
 import re
 import colorsys
+import psutil
 from datetime import datetime
 from time import sleep
 from scipy import interp
@@ -139,6 +140,25 @@ def get_free_ram():
             'background': BACKGROUND_CLR,
             'color': color}
 
+def get_dropbox_status():
+    """
+    Return dropbox status.
+    """
+    dpid = 0
+    msg = "Dropbox isn't running!"
+    for p in psutil.process_iter():
+        if p.name() == 'dropbox':
+            dpid = p.pid
+
+    if dpid > 1:
+       output = subprocess.check_output(['dropbox', 'status'])
+       line = output.decode('utf-8').split('\n')[0].lower()
+       msg = 'Dropbox is {}'.format(line)
+
+    return { 'full_text': msg,
+             'background': BACKGROUND_CLR,
+             'color': NORMAL_CLR }
+
 
 def get_time():
     """
@@ -160,9 +180,9 @@ if __name__ == "__main__":
 
     print(json.dumps(VERSION))
     print("[")
-    print("[]")
+    print("[],")
     while True:
-        STAT = [get_volume(), get_free_hd(), get_free_ram(),
+        STAT = [get_volume(), get_dropbox_status(), get_free_hd(), get_free_ram(),
                 get_load_avg(), get_acpi(), get_time(),]
         print(",{0}".format(json.dumps(STAT)))
         sys.stdout.flush()
