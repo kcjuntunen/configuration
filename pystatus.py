@@ -54,25 +54,36 @@ def get_acpi():
     """
     Return acpi status.
     """
-    output = subprocess.check_output(['acpi', '-i']).decode('utf-8')
-    status = output.split()
-    charging = status[2].split(',')[0]
-    full_text = output.split('\n')[0].split(',')[2].strip()
-    percentstr = status[3].split('%')[0]
-    if percentstr == '':
-        percentstr = '0'
-    percent = float(percentstr)
+    try:
+        output = subprocess.check_output(['acpi', '-i']).decode('utf-8')
+        status = output.split()
+        charging = status[2].split(',')[0]
+        full_text = output.split('\n')[0].split(',')[2].strip()
+        percentstr = status[3].split('%')[0]
+        if percentstr == '':
+            percentstr = '0'
+        percent = float(percentstr)
 
-    interp_val = interp(percent, [0, 100], [0, 1/3])
-    color = hsv_rgbhex((interp_val, 1.0, 1))
+        interp_val = interp(percent, [0, 100], [0, 1/3])
+        color = hsv_rgbhex((interp_val, 1.0, 1))
 
-    if 'Dis' not in charging:
-        color = OK_CLR
+        if 'Dis' not in charging:
+            color = OK_CLR
 
-    return {'full_text':
-            "({0:.0f}%) {1}".format(percent, full_text),
-            'background': BACKGROUND_CLR,
-            'color': color}
+        return {'full_text':
+                "({0:.0f}%) {1}".format(percent, full_text),
+                'background': BACKGROUND_CLR,
+                'color': color}
+    except IndexError as indexError:
+        return {'full_text':
+                str(indexError),
+                'background': BACKGROUND_CLR,
+                'color': ALERT_CLR}
+    except Exception as exception:
+        return {'full_text':
+                exception,
+                'background': BACKGROUND_CLR,
+                'color': ALERT_CLR}
 
 
 
