@@ -30,14 +30,14 @@ set $monospace pango:Source Code Pro Medium 10
 set $sansserif pango:Cantarell 10
 
 # Commands
-set $term urxvt256c-ml -name "urxvt@$HOSTNAME"
-set $wallpaper $(ls /home/juntunenkc/Pictures/Bing/*jpg | sort -R | tail -1)
+set $term urxvt256c-ml -name "urxvt@$HOSTNAME" -fn 'xft:Source Code Pro:size=11' -letsp 0
+set $wallpaper $(ls /home/juntunenkc/Dropbox/wallpaper/*jpg | sort -R | tail -1)
 set $editor /home/juntunenkc/bin/em
-set $browser $(which google-chrome)
+set $browser $(which firefox)
 set $menu dmenu_run -l 25 -p \> -nb "$bg-color" -nf "$command-text" -sf "$selected-text" -sb "$selection-bg" -fn "Source Code Pro-10"
 set $lock $(which swaylock) -i $wallpaper --scaling=fill
-set $volup amixer -q set Master 5%+ unmute
-set $voldn amixer -q set Master 5%- unmute
+set $volup amixer -q set Master 2%+ unmute
+set $voldn amixer -q set Master 2%- unmute
 set $volmt amixer -q set Master toggle
 
 client.focused             $bg-color            $bg-color            $text-color            $indicator
@@ -228,7 +228,7 @@ bindsym $mod+r mode "resize"
 # Read `man 5 sway-bar` for more information about this section.
 bar {
     position top
-    status_command /home/juntunenkc/bin/pystatus.py 5
+    status_command /home/juntunenkc/bin/pystatus.py 10
     font $monospace
     colors {
         # focused_workspace  #4c7899 #285577 #ffffff
@@ -246,5 +246,4 @@ bar {
 }
 
 include /etc/sway/config.d/*
-
 exec xrdb -load ~/.Xresources
