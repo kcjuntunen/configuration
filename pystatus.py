@@ -92,7 +92,12 @@ def get_volume():
     """
     Return volume level.
     """
-    output = subprocess.check_output(['amixer', 'get', 'Master'])
+    try:
+        output = subprocess.check_output(['amixer', 'get', 'Master'])
+    except:
+        return {'full_text': 'Vol: {}'.format(":-("),
+                'background': BACKGROUND_CLR,
+                'color': ALERT_CLR}
     line = output.decode("utf-8").split('\n')[5]
     regx = re.compile(r'\d*\%')
     mtch = regx.findall(line)
