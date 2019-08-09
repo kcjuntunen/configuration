@@ -33,7 +33,7 @@ def get_load_avg():
         color = NORMAL_CLR
         interp_val = interp(loadavg, [0, 4], [1/3, 0])
         color = hsv_rgbhex((interp_val, 1.0, 1))
-        return {'full_text': "Load: {0:.2f}".format(loadavg),
+        return {'full_text': "🐿 {0:.2f}".format(loadavg),
                 'background': BACKGROUND_CLR,
                 'color': color}
 
