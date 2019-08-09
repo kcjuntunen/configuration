@@ -72,7 +72,7 @@ def get_acpi():
             color = OK_CLR
 
         return {'full_text':
-                "({0:.0f}%) {1}".format(percent, full_text),
+                "🔋({0:.0f}%) {1}".format(percent, full_text),
                 'background': BACKGROUND_CLR,
                 'color': color}
     except IndexError as indexError:
@@ -95,7 +95,7 @@ def get_volume():
     try:
         output = subprocess.check_output(['amixer', 'get', 'Master'])
     except:
-        return {'full_text': 'Vol: {}'.format(":-("),
+        return {'full_text': '🔈 {}'.format(":-("),
                 'background': BACKGROUND_CLR,
                 'color': ALERT_CLR}
     line = output.decode("utf-8").split('\n')[5]
@@ -108,7 +108,7 @@ def get_volume():
     if muted:
         color = hsv_rgbhex((interp_val, 0.6, 0.5))
 
-    return {'full_text': 'Vol: {}'.format(status),
+    return {'full_text': '📢 {}'.format(status),
             'background': BACKGROUND_CLR,
             'color': color}
 
@@ -122,7 +122,7 @@ def get_free_hd():
     for line in lines:
         if 'home' in line:
             freespace = line.split()[3]
-            return {'full_text': 'Home: {0}'.format(freespace),
+            return {'full_text': '💾 {0}'.format(freespace),
                     'background': BACKGROUND_CLR, 'color': NORMAL_CLR}
 
 
@@ -141,7 +141,7 @@ def get_free_ram():
                 color = hsv_rgbhex((colorval, 1.0, 1))
             if 'SwapFree' in line:
                 freeswap = int(line.split()[1])
-    return {'full_text': 'RAM: {}M Swap: {}M'.format(freemem // 1024, freeswap // 1024),
+    return {'full_text': '🐏 {}M ⁫📁 {}M'.format(freemem // 1024, freeswap // 1024),
             'background': BACKGROUND_CLR,
             'color': color}
 
@@ -170,7 +170,7 @@ def get_time():
     Return formatted time.
     """
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
-    return {'full_text': '{}'.format(now),
+    return {'full_text': '⏲ {}'.format(now),
             'background': BACKGROUND_CLR,
             'color': NORMAL_CLR}
 
