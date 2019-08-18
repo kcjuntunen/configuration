@@ -248,5 +248,12 @@ bar {
     }
 }
 
-include /etc/sway/config.d/*
-exec xrdb -load ~/.Xresources
+# According to the manual `move position center' is correct. However it doesn't
+# do anything here.
+for_window [title="Calculator"] focus, floating enable, move position center
+for_window [title=".*\]\@falken"] focus, floating enable, move position center
+for_window [title="^emacs.*"] move window to workspace "1:"
+for_window [title="^urxvt.*"] move window to workspace "1:"
+for_window [title=".*Mozilla Firefox$"] move window to workspace "2:"
+default_border pixel 0
+#include /etc/sway/config.d/*
