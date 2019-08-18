@@ -3,6 +3,7 @@
 # Copy this to ~/.config/sway/config and edit it to your liking.
 #
 # Read `man 5 sway` for a complete reference.
+exec xrdb -load ~/.Xresources
 
 ### Variables
 #
@@ -30,9 +31,10 @@ set $monospace pango:Source Code Pro Medium 10
 set $sansserif pango:Cantarell 10
 
 # Commands
-set $term urxvt256c-ml -name "urxvt@$HOSTNAME" -fn 'xft:Source Code Pro:size=11' -letsp 0
+# set $term urxvt256c-ml -name "urxvt@$HOSTNAME" -fn 'xft:Source Code Pro:size=11' -letsp 0
+set $term urxvt256c-ml -name "urxvt@$HOSTNAME" -fn 'xft:Anka/Coder Condensed:style=Regular:size=14' -letsp 0 +sb
 set $wallpaper $(ls /home/juntunenkc/Documents/wallpaper/* | sort -R | tail -1)
-set $editor /home/juntunenkc/bin/em
+set $editor emacs
 set $browser $(which firefox)
 set $menu dmenu_run -l 25 -p \> -nb "$bg-color" -nf "$command-text" -sf "$selected-text" -sb "$selection-bg" -fn "Source Code Pro-10"
 set $lock $(which swaylock) -i $wallpaper --scaling=fill
@@ -104,6 +106,7 @@ font $sansserif
     bindsym $mod+m exec $editor
     bindsym $mod+x exec $browser
     bindsym $mod+i exec $lock
+
 #
 # Moving around:
 #
