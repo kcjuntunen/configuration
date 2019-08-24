@@ -50,6 +50,34 @@ def hsv_rgbhex(hsv):
         hexstr += '{0:02x}'.format(int(val))
     return hexstr + 'ff'
 
+def get_battery_status():
+    try:
+        data = dict()
+        with open('/sys/class/power_supply/BAT0/uevent') as fh:
+            for line in fh.readlines():
+                splits = line.split('=')
+                data[splits[0].replace('POWER_SUPPLY_', "")] = splits[1].strip()
+
+        percentstr = data['CAPACITY']
+        if percentstr == '':
+            percentstr = '0'
+        percent = float(percentstr)
+        interp_val = interp(percent, [0, 100], [0, 1/3])
+        color = hsv_rgbhex((interp_val, 1.0, 1))
+
+        if 'Dis' not in data['STATUS']:
+            color = OK_CLR
+
+        return {'full_text':
+                "🔋({0:.0f}%) {1}".format(percent,
+                                              data['STATUS']),
+                'background': BACKGROUND_CLR,
+                'color': color}
+    except Exception as exception:
+        return {'full_text':
+                exception,
+                'background': BACKGROUND_CLR,
+                'color': ALERT_CLR}
 
 def get_acpi():
     """
@@ -188,7 +216,7 @@ if __name__ == "__main__":
     print("[],")
     while True:
         STAT = [get_volume(), get_dropbox_status(), get_free_hd(), get_free_ram(),
-                get_load_avg(), get_acpi(), get_time(),]
+                get_load_avg(), get_battery_status(), get_time(),]
         print(",{0}".format(json.dumps(STAT)))
         sys.stdout.flush()
         if not LOOP:
