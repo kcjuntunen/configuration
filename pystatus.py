@@ -170,7 +170,7 @@ def get_time():
     Return formatted time.
     """
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
-    return {'full_text': '⏲ {}'.format(now),
+    return {'full_text': '📅 {}'.format(now),
             'background': BACKGROUND_CLR,
             'color': NORMAL_CLR}
 
